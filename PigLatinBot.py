@@ -8,7 +8,7 @@ TODO
  *
  * Store already_done on a file so we don't duplicate comments on reboot
  *
- * Handle punctuation
+ * Handle punctuation - Done!
  *
  * Run on bot friendly subreddits
  *
@@ -31,6 +31,7 @@ all_comments = r.get_comments('test')
 #Maintain a list of comments that have been translated so we don't spam
 already_done = set()
 our_comment = ''
+punct = ''
 signature = '\n\n>I\'m [Pig_Bot](https://github.com/MattCharles/Pig_Bot), Pig translator extraordinaire.'
 VOWELS = ("a", "e", "i", "o", "u", "A", "E", "I", "O", "U")
 PUNCTUATION = (".", ",", ":", "?", "!", ";")
@@ -48,13 +49,21 @@ for comment in all_comments:
 		for entry in words:
 			#translate into Pig Latin
 
+			#handle punctuation
+			if entry[-1] in PUNCTUATION:
+				punct = entry[-1]
+				entry = entry[:-1]
+
 			#if it starts with a vowel, just add -ay
 			if entry[0] in VOWELS:
-				our_comment += entry + "ay" + " "
+				our_comment += entry + "ay" + punct  + " "
 
 			else:
-				our_comment += entry[1:] + entry[0] + "ay" + " "
-		
+				our_comment += entry[1:] + entry[0] + "ay" + punct + " "
+			
+			#clear punctuation for next word
+			punct = ''
+
 		#comment result
 		comment.reply(our_comment + signature)
 
